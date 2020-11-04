@@ -28,6 +28,20 @@ envoy_cc_test(
 )
 
 envoy_cc_test(
+    name = "wasm_vm_test2",
+    srcs = ["wasm_vm_test2.cc"],
+    data = envoy_select_wasm([
+        "//test/extensions/common/wasm/test_data:test_rust2.wasm",
+    ]),
+    deps = [
+        "//source/extensions/common/wasm:wasm_lib",
+        "//test/test_common:environment_lib",
+        "//test/test_common:registry_lib",
+        "//test/test_common:utility_lib",
+    ],
+)
+
+envoy_cc_test(
     name = "wasm_test",
     srcs = ["wasm_test.cc"],
     data = envoy_select_wasm([

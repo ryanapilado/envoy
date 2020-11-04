@@ -15,6 +15,12 @@ wasm_rust_binary(
     rustc_flags = ["-Clink-arg=-zstack-size=32768"],
 )
 
+wasm_rust_binary(
+    name = "test_rust2.wasm",
+    srcs = ["test_rust2.rs"],
+    rustc_flags = ["-Clink-arg=-zstack-size=32768"],
+)
+
 envoy_cc_library(
     name = "test_cpp_plugin",
     srcs = [
