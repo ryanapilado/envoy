@@ -33,6 +33,12 @@ message CapabilityRestrictionConfig {
 
 // Configuration for sanitization of inputs to an allowed capability. This is currently unimplemented.
 message SanitizationConfig {
+  repeated string argument_list = 1;
+  enum ListType {
+    ALLOWLIST = 0;
+    DENYLIST = 1;
+  }
+  ListType list_type = 2;
 }
 
 // Configuration for a Wasm VM.

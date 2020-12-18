@@ -55,6 +55,8 @@ WasmHandleExtensionFactory EnvoyWasm::wasmFactory() {
     proxy_wasm::AllowedCapabilitiesMap allowed_capabilities;
     for (auto& capability : cr_config.allowed_capabilities()) {
       // TODO(ryanapilado): populate struct when sanitization is implemented
+      proxy_wasm::SanitizerConfig sanitizer_config;
+      sanitizer_config.add_argument_list(capability);
       allowed_capabilities[capability.first] = proxy_wasm::SanitizerConfig();
     }
     auto wasm = std::make_shared<Wasm>(vm_config.runtime(), vm_config.vm_id(),
