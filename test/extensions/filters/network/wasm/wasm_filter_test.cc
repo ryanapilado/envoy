@@ -202,16 +202,16 @@ TEST_P(WasmNetworkFilterTest, RestrictOnNewConnection) {
       {"proxy_get_property", proxy_wasm::SanitizationConfig()},
       {"proxy_log", proxy_wasm::SanitizationConfig()},
       {"proxy_on_new_connection", proxy_wasm::SanitizationConfig()}};
-  setupConfig("", "logging", false, allowed_capabilities);
+  setupConfig("", "restriction", false, allowed_capabilities);
   setupFilter();
 
   // Expect this call, because proxy_on_new_connection is allowed
-  EXPECT_CALL(filter(), log_(spdlog::level::trace, Eq(absl::string_view("onNewConnection 2"))));
+  EXPECT_CALL(filter(), log_(spdlog::level::trace, Eq(absl::string_view("onNewConnection"))));
   EXPECT_EQ(Network::FilterStatus::Continue, filter().onNewConnection());
 
   // Do not expect this call, because proxy_on_downstream_connection_close is not allowed
   EXPECT_CALL(filter(),
-              log_(spdlog::level::trace, Eq(absl::string_view("onDownstreamConnectionClose 2 1"))))
+              log_(spdlog::level::trace, Eq(absl::string_view("onDownstreamConnectionClose"))))
       .Times(0);
   read_filter_callbacks_.connection_.close(Network::ConnectionCloseType::FlushWrite);
   // Noop.
@@ -228,17 +228,17 @@ TEST_P(WasmNetworkFilterTest, RestrictOnDownstreamConnectionClose) {
       {"proxy_get_property", proxy_wasm::SanitizationConfig()},
       {"proxy_log", proxy_wasm::SanitizationConfig()},
       {"proxy_on_downstream_connection_close", proxy_wasm::SanitizationConfig()}};
-  setupConfig("", "logging", false, allowed_capabilities);
+  setupConfig("", "restriction", false, allowed_capabilities);
   setupFilter();
 
   // Do not expect this call, because proxy_on_new_connection is not allowed
-  EXPECT_CALL(filter(), log_(spdlog::level::trace, Eq(absl::string_view("onNewConnection 2"))))
+  EXPECT_CALL(filter(), log_(spdlog::level::trace, Eq(absl::string_view("onNewConnection"))))
       .Times(0);
   EXPECT_EQ(Network::FilterStatus::Continue, filter().onNewConnection());
 
   // Expect this call, because proxy_on_downstream_connection_close allowed
   EXPECT_CALL(filter(),
-              log_(spdlog::level::trace, Eq(absl::string_view("onDownstreamConnectionClose 2 1"))));
+              log_(spdlog::level::trace, Eq(absl::string_view("onDownstreamConnectionClose"))));
   read_filter_callbacks_.connection_.close(Network::ConnectionCloseType::FlushWrite);
   // Noop.
   read_filter_callbacks_.connection_.close(Network::ConnectionCloseType::FlushWrite);
@@ -254,17 +254,17 @@ TEST_P(WasmNetworkFilterTest, RestrictLog) {
       {"proxy_get_property", proxy_wasm::SanitizationConfig()},
       {"proxy_on_new_connection", proxy_wasm::SanitizationConfig()},
       {"proxy_on_downstream_connection_close", proxy_wasm::SanitizationConfig()}};
-  setupConfig("", "logging", false, allowed_capabilities);
+  setupConfig("", "restriction", false, allowed_capabilities);
   setupFilter();
 
   // Do not expect this call, because proxy_log is not allowed
-  EXPECT_CALL(filter(), log_(spdlog::level::trace, Eq(absl::string_view("onNewConnection 2"))))
+  EXPECT_CALL(filter(), log_(spdlog::level::trace, Eq(absl::string_view("onNewConnection"))))
       .Times(0);
   EXPECT_EQ(Network::FilterStatus::Continue, filter().onNewConnection());
 
   // Do not expect this call, because proxy_log is not allowed
   EXPECT_CALL(filter(),
-              log_(spdlog::level::trace, Eq(absl::string_view("onDownstreamConnectionClose 2 1"))))
+              log_(spdlog::level::trace, Eq(absl::string_view("onDownstreamConnectionClose"))))
       .Times(0);
   read_filter_callbacks_.connection_.close(Network::ConnectionCloseType::FlushWrite);
   // Noop.

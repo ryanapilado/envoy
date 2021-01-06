@@ -18,6 +18,16 @@ wasm_rust_binary(
     ],
 )
 
+wasm_rust_binary(
+    name = "restriction_rust.wasm",
+    srcs = ["restriction_rust.rs"],
+    deps = [
+        "@proxy_wasm_rust_sdk//:proxy_wasm",
+        "@proxy_wasm_rust_sdk//bazel/cargo:log",
+    ],
+)
+
+
 envoy_cc_library(
     name = "test_cpp_plugin",
     srcs = [
